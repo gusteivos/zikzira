@@ -1,9 +1,9 @@
 
 #folders:
 
-    /build
-    /.*
+/build
+/.*
 
 #files:
 
-    /res/res.o
+/res/res.o
