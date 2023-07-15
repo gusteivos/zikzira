@@ -1,0 +1,145 @@
+// void remove_equal_cells_from_left_to_right()
+// {
+
+//     for (int y = 0; y < 13; y++)
+//     {
+
+//         int previous_value = -1;
+//         unsigned int start = -1, count = 0;
+
+//         for (int x = 0; x < 6; x++)
+//         {
+
+//             int cell = board_ind[x][y];
+
+//             int current_value = cell;
+
+//             if (current_value != previous_value)
+//             {
+//                 if (count >= 3)
+//                 {
+//                     for (Uint32 i = start; i < start + count; i++)
+//                     {
+//                         board_ind[i][y] = -1;
+//                     }
+//                 }
+
+//                 start = -1;
+//                 count = 0;
+//             }
+
+//             if (current_value != -1)
+//             {
+//                 if (start == -1)
+//                 {
+//                     start = x;
+//                 }
+//                 count++;
+//             }
+
+//             previous_value = current_value;
+//         }
+
+//         if (count >= 3)
+//         {
+//             for (Uint32 i = start; i < start + count; i++)
+//             {
+//                 board_ind[i][y] = -1;
+//             }
+//         }
+
+//     }
+
+// }
+
+// void remove_equal_cells_from_top_to_down()
+// {
+//     for (int x = 0; x < 6; x++)
+//     {
+//         int previous_value = -1;
+//         unsigned int start = -1, count = 0;
+
+//         for (int y = 0; y < 13; y++)
+//         {
+//             int cell = board_ind[x][y];
+//             int current_value = cell;
+
+//             if (current_value != previous_value)
+//             {
+//                 if (count >= 3)
+//                 {
+//                     for (unsigned int i = start; i < start + count; i++)
+//                     {
+//                         board_ind[x][i] = -1;
+//                     }
+//                 }
+
+//                 start = -1;
+//                 count = 0;
+//             }
+
+//             if (current_value != -1)
+//             {
+//                 if (start == -1)
+//                 {
+//                     start = y;
+//                 }
+//                 count++;
+//             }
+
+//             previous_value = current_value;
+//         }
+
+//         if (count >= 3)
+//         {
+//             for (unsigned int i = start; i < start + count; i++)
+//             {
+//                 board_ind[x][i] = -1;
+//             }
+//         }
+//     }
+// }
+
+// void fill_board_holes()
+// {
+
+//     bool holes_exist = true;
+
+//     while (holes_exist)
+//     {
+
+//         holes_exist = false;
+
+//         for (int x = 0; x < 6; x++)
+//         {
+
+//             for (int y = 12; y > 0; y--)
+//             {
+
+//                 if (board_ind[x][y] < 0)
+//                 {
+
+//                     if (board_ind[x][y - 1] >= 0)
+//                     {
+
+//                         board_ind[x][y] = board_ind[x][y - 1];
+
+//                         board_ind_pos[x][y] = board_ind_pos[x][y - 1];
+
+//                         board_ind_pos[x][y - 1] = (SDL_FPoint) { x, y - 1 };
+
+//                         board_ind[x][y - 1] = -1;
+
+//                         holes_exist = true;
+
+//                     }
+
+//                 }
+
+//             }
+
+//         }
+
+//     }
+
+// }
