@@ -1,0 +1,9 @@
+
+#folders:
+
+    /build
+    /.*
+
+#files:
+
+    /res/res.o
