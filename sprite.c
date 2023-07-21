@@ -54,6 +54,8 @@ void destroy_sprite(sprite_t *spr)
     
     free(spr);
 
+    spr = NULL;
+
     return;
 
 }

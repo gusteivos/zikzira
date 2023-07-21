@@ -8,8 +8,8 @@
     #include "sound.h"
     #include "window.h"
 
-    #include <gameplay shared/gps_assets.h>
-    #include <gameplay shared/gps_board.h>
+    #include <gameplay_shared/gps_assets.h>
+    #include <gameplay_shared/gps_board.h>
 
     #include <math.h>
     #include <time.h>

@@ -101,15 +101,47 @@ void gameloop_start()
 
         snprintf(filename, sizeof(filename), "format-%d.png", i + 1);
 
-        char *image_path = get_image_path_from_assets("formats/8bits/", filename);
+        char *image_path = get_image_path_from_assets("formats/16bits/", filename);
 
         sprite_t *spr = load_sprite(image_path);
 
-        add_format_on_gps_assets(assets, create_gps_format(false, spr));
+        sprite_anim_t *aspr = create_sprite_anim(spr, spr->source_rectangle, 1, 0.0f);
+
+        add_format_on_gps_assets(assets, create_gps_format(false, aspr));
 
         free(image_path);
     
     }
+
+    /*Temp: */
+        char *image_path = get_image_path_from_assets("", "canvas-2.png");
+
+        sprite_anim_t *canvas = load_sprite_anim(image_path, rendering_surface_rect, 8, 0.150);
+
+        canvas->spr->destination_rectangle = rendering_surface_rect;
+
+        assets->background_canvas = canvas;
+
+        free(image_path);
+
+        image_path = get_image_path_from_assets("", "xcursor.png");
+
+        assets->x_cursor = load_sprite(image_path);
+
+        free(image_path);
+
+        image_path = get_image_path_from_assets("", "ycursor.png");
+
+        assets->y_cursor = load_sprite(image_path);
+
+        free(image_path);
+
+        image_path = get_image_path_from_assets("", "incursor.png");
+
+        assets->in_cursor = load_sprite(image_path);
+
+        free(image_path);
+        
 
     start_gameplay(assets);
 
