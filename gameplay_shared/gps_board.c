@@ -141,7 +141,7 @@ int  get_gps_board_a        (gps_board_t *board, int x, int y)
 
         fprintf(stderr, "");
 
-        return GPS_CLEANING_A_VALUE;
+        return GPS_BOARD_CLEANING_A_VALUE;
 
     }
 
@@ -315,7 +315,7 @@ bool traverse_left_to_right_define_c_based_on_a(gps_board_t *board, int minimum_
 
             int cell = get_gps_board_a(board, x, y);
 
-            if (cell == previous_value)
+            if (cell == previous_value && cell != GPS_BOARD_CLEANING_A_VALUE)
             {
             
                 count++;
@@ -360,6 +360,128 @@ bool traverse_left_to_right_define_c_based_on_a(gps_board_t *board, int minimum_
 
         }
 
+    }
+
+    return defined_c;
+}
+
+bool traverse_top_to_bottom_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values)
+{
+    if (board == NULL || board->a == NULL || board->c == NULL)
+    {
+        fprintf(stderr, "Invalid board or board data.\n");
+        return false;
+    }
+
+    bool defined_c = false;
+
+    for (int x = 0; x < board->width; x++)
+    {
+        int previous_value = -1;
+        unsigned int count = 0;
+
+        for (int y = 0; y < board->height; y++)
+        {
+            int cell = get_gps_board_a(board, x, y);
+
+            if (cell == previous_value && cell != GPS_BOARD_CLEANING_A_VALUE)
+            {
+                count++;
+            }
+            else
+            {
+
+                if (count >= minimum_number_equal_values)
+                {
+
+                    for (unsigned int i = y - count; i < y; i++)
+                    {
+                
+                        set_gps_board_c(board, x, i, true);
+                
+                    }
+                
+                    defined_c = true;
+                
+                }
+
+                count = 1;
+                previous_value = cell;
+            }
+        }
+
+        if (count >= minimum_number_equal_values)
+        {
+            for (unsigned int i = board->height - count; i < board->height; i++)
+            {
+                set_gps_board_c(board, x, i, true);
+            }
+            defined_c = true;
+        }
+    }
+
+    return defined_c;
+}
+
+bool traverse_diagonal_left_to_right_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values)
+{
+    if (board == NULL || board->a == NULL || board->c == NULL)
+    {
+        fprintf(stderr, "Invalid board or board data.\n");
+        return false;
+    }
+
+    bool defined_c = false;
+
+    // Percorrer as diagonais começando pelas diagonais superiores
+    for (int diagonal_start_x = 0; diagonal_start_x < board->width; diagonal_start_x++)
+    {
+        for (int diagonal_start_y = 0; diagonal_start_y < board->height; diagonal_start_y++)
+        {
+            int previous_value = -1;
+            unsigned int count = 0;
+
+            // Percorrer a diagonal
+            for (int i = 0; i < board->width && (i + diagonal_start_x) < board->width && (i + diagonal_start_y) < board->height; i++)
+            {
+                int x = diagonal_start_x + i;
+                int y = diagonal_start_y + i;
+
+                int cell = get_gps_board_a(board, x, y);
+
+                if (cell == previous_value && cell != GPS_BOARD_CLEANING_A_VALUE)
+                {
+                    count++;
+                }
+                else
+                {
+                    if (count >= minimum_number_equal_values)
+                    {
+                        for (unsigned int j = i - count; j < i; j++)
+                        {
+                            int x_to_set = diagonal_start_x + j;
+                            int y_to_set = diagonal_start_y + j;
+                            set_gps_board_c(board, x_to_set, y_to_set, true);
+                        }
+                        defined_c = true;
+                    }
+
+                    count = 1;
+                    previous_value = cell;
+                }
+            }
+
+            if (count >= minimum_number_equal_values)
+            {
+                for (unsigned int j = board->width - diagonal_start_x - count; j < board->width - diagonal_start_x; j++)
+                {
+                    int x_to_set = diagonal_start_x + j;
+                    int y_to_set = diagonal_start_y + j;
+                    set_gps_board_c(board, x_to_set, y_to_set, true);
+                }
+                defined_c = true;
+            }
+        }
     }
 
     return defined_c;

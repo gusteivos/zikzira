@@ -17,7 +17,7 @@
     #include <stdlib.h>
 
 
-    #define GPS_CLEANING_A_VALUE -1
+    #define GPS_BOARD_CLEANING_A_VALUE -1
 
     
     typedef struct gps_board
@@ -62,11 +62,15 @@
 
     extern bool traverse_left_to_right_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values);
 
+    extern bool traverse_top_to_bottom_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values);
+    
+    extern bool traverse_diagonal_left_to_right_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values);
+
 
     extern void destroy_gps_board(gps_board_t *board);
 
 
-    #define clear_gps_board_a(board) clear_gps_board_a_value           (board, GPS_CLEANING_A_VALUE)
+    #define clear_gps_board_a(board) clear_gps_board_a_value           (board, GPS_BOARD_CLEANING_A_VALUE)
     
     #define clear_gps_board_b(board) set_gps_board_position_in_b_values(board)
 

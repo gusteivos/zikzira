@@ -199,8 +199,22 @@ int update_gameplay(float dt)
     if (bb)
     {
 
-        traverse_left_to_right_define_c_based_on_a(gameplay_board, 2);
+        clear_gps_board_c(gameplay_board);
 
+        if (traverse_left_to_right_define_c_based_on_a(gameplay_board, 3) == true)
+            goto remove;
+        
+        clear_gps_board_c(gameplay_board);
+
+        if (traverse_top_to_bottom_define_c_based_on_a(gameplay_board, 3) == true)
+            goto remove;
+
+        clear_gps_board_c(gameplay_board);
+
+        if (traverse_diagonal_left_to_right_define_c_based_on_a(gameplay_board, 3) == true)
+            goto remove;
+
+remove:
         for (int y = 0; y < gameplay_board->height; y++)
         {
 
@@ -217,8 +231,6 @@ int update_gameplay(float dt)
             }
         
         }
-
-        clear_gps_board_c(gameplay_board);
 
         fill_gameplay_board_holes();
 
@@ -379,7 +391,7 @@ bool render_gameplay_board()
 
                 int board_cell_type = get_gps_board_a(gameplay_board, x, y);
 
-                if (board_cell_type != GPS_CLEANING_A_VALUE)
+                if (board_cell_type != GPS_BOARD_CLEANING_A_VALUE)
                 {
 
                     sprite_t  *board_cell_type_sprite   = gameplay_assets->format_list[board_cell_type]->spr->spr;
@@ -422,7 +434,7 @@ int render_gameplay_next_pieces_board()
 
                 int board_cell_type = get_gps_board_a(gameplay_next_pieces_board, x, y);
 
-                if (board_cell_type != GPS_CLEANING_A_VALUE)
+                if (board_cell_type != GPS_BOARD_CLEANING_A_VALUE)
                 {
 
                     sprite_t *board_cell_type_sprite   = gameplay_assets->format_list[board_cell_type]->spr->spr;
