@@ -66,6 +66,8 @@
     
     extern bool traverse_diagonal_left_to_right_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values);
 
+    extern bool traverse_diagonal_right_to_left_define_c_based_on_a(gps_board_t *board, int minimum_number_equal_values);
+
 
     extern void destroy_gps_board(gps_board_t *board);
 

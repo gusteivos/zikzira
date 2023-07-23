@@ -11,6 +11,8 @@
     #include <gameplay_shared/gps_assets.h>
     #include <gameplay_shared/gps_board.h>
 
+    #include <key_delays.h>
+
     #include <math.h>
     #include <time.h>
 
