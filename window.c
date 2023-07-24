@@ -24,6 +24,7 @@ bool setup_window            (const char *title, Uint32 flags)
 
 }
 
+
 void update_window_attributes()
 {
 

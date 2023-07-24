@@ -23,9 +23,9 @@ SDL_Surface *rendering_surface        = NULL;
 bool setup_renderer(SDL_Window *window, int index, Uint32 flags)
 {
 
-    renderer_mutex          = SDL_CreateMutex();
+    renderer_mutex = SDL_CreateMutex();
 
-    if (renderer_mutex          == NULL)
+    if (renderer_mutex == NULL)
     {
 
         fprintf(stderr, "Error creating mutex to protect the renderer: %s\n", SDL_GetError());

@@ -11,6 +11,8 @@
     #include <gameplay_shared/gps_assets.h>
     #include <gameplay_shared/gps_board.h>
 
+    #include <assets.h>
+
     #include <key_delays.h>
 
     #include <math.h>
@@ -22,16 +24,16 @@
     extern gps_board_t  *gameplay_board;
 
 
-    extern int start_gameplay(gps_assets_t *assets);
+    extern int tstart_gameplay(gps_assets_t *assets);
 
 
-    extern int update_gameplay     (float dt);
+    extern int tupdate_gameplay     (float dt);
     
-    extern int render_gameplay     (float dt);
+    extern int trender_gameplay     (float dt);
 
-    extern int late_update_gameplay(float dt);
+    extern int tlate_update_gameplay(float dt);
 
 
-    extern void quit_gameplay(void);
+    extern void tquit_gameplay(void);
 
 #endif

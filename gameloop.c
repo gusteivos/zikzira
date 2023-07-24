@@ -143,34 +143,34 @@ void gameloop_start()
         free(image_path);
         
 
-    start_gameplay(assets);
+    tstart_gameplay(assets);
 
 }
 
 void gameloop_update(float dt)
 {
 
-    update_gameplay(dt);
+    tupdate_gameplay(dt);
 
 }
 
 void gameloop_render(float dt)
 {
 
-    render_gameplay(dt);
+    trender_gameplay(dt);
 
 }
 
 void gameloop_late_update(float dt)
 {
 
-    late_update_gameplay(dt);
+    tlate_update_gameplay(dt);
 
 }
 
 void gameloop_quit()
 {
 
-    quit_gameplay();
+    tquit_gameplay();
 
 }

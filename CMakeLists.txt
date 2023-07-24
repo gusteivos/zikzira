@@ -9,6 +9,7 @@ project(zikzira VERSION 0.0.1 LANGUAGES C)
 file(GLOB executable_source_files
     "./*.c"
     "./gameplay_shared/*.c"
+    "./gameplay/*.c"
 )
 
 set(executable_header_files

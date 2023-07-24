@@ -25,6 +25,7 @@
 
 
     extern bool setup_window            (const char *, Uint32);
+    
 
     extern void update_window_attributes(void);
 

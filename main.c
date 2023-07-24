@@ -17,6 +17,7 @@ int main(int argc, char *argv[])
 
 #endif
 
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0)
     {
     
@@ -30,8 +31,10 @@ int main(int argc, char *argv[])
 
     Mix_Init(MIX_INIT_MP3);
 
+
         /*temp: */
             gameloop_is_running = true;
+
 
     if (setup_window(WINDOW_TITLE, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN) == false)
     {
@@ -45,6 +48,7 @@ int main(int argc, char *argv[])
         return 1;
 
     }
+
 
     if (setup_renderer(window, -1, SDL_RENDERER_ACCELERATED)                == false)
     {
@@ -61,7 +65,9 @@ int main(int argc, char *argv[])
 
     }
 
+
     setup_keyboard();
+
 
     if ((gameloop_thread = SDL_CreateThread(gameloop_thread_routine, "gameloop thread", NULL)) == NULL)
     {
@@ -82,14 +88,16 @@ int main(int argc, char *argv[])
 
     }
 
+
     SDL_Event event;
 
     while (gameloop_is_running)
     {
 
-        update_window_attributes();
-
         update_mouse();
+
+
+        update_window_attributes();
 
         while (SDL_PollEvent(&event))
             switch (event.type)
@@ -100,6 +108,7 @@ int main(int argc, char *argv[])
                 gameloop_is_running = false;
 
                 break;
+
 
             case SDL_WINDOWEVENT:
 
@@ -140,6 +149,7 @@ int main(int argc, char *argv[])
 
                 break;
 
+
             default:
                 break;
 
@@ -148,13 +158,13 @@ int main(int argc, char *argv[])
         update_renderer_attributes();
 
 
-
             main_try_render           (window);
 
 
         SDL_Delay(1);
 
     }
+
 
     SDL_WaitThread(gameloop_thread, NULL);
 
@@ -226,6 +236,7 @@ static void set_working_directory_to_binary_directory()
         return;
 
     }
+
 
     if (chdir(current_binary_directory) != 0)
     {

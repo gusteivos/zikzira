@@ -31,6 +31,6 @@
 
     #define get_music_path_from_assets(subfolder, file_name) get_file_path_from_assets(ASSETS_MUSS_FOLDER, subfolder, file_name)
 
-    #define get_sonds_path_from_assets(subfolder, file_name) get_file_path_from_assets(ASSETS_SONS_FOLDER, subfolder, file_name)
+    #define get_sound_path_from_assets(subfolder, file_name) get_file_path_from_assets(ASSETS_SONS_FOLDER, subfolder, file_name)
 
 #endif

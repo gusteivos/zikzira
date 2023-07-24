@@ -25,6 +25,8 @@ int x = 0;
 
 int y = -1;
 
+int bg_mus_id = -1;
+
 
 bool render_gameplay_board();
 
@@ -88,7 +90,7 @@ SDL_FPoint lerp_threshold(SDL_FPoint start_value, SDL_FPoint target_value, float
 
 }
 
-int start_gameplay(gps_assets_t *assets)
+int tstart_gameplay(gps_assets_t *assets)
 {
 
     /*TODO: */
@@ -112,6 +114,7 @@ int start_gameplay(gps_assets_t *assets)
 
     clear_gps_board_c(gameplay_board);
 
+    bg_mus_id = load_music(get_sound_path_from_assets("", "curse-liminal.mp3"));
 
     /*Temp: */
 
@@ -151,6 +154,8 @@ int start_gameplay(gps_assets_t *assets)
 
         randomize_next_pieces_board(5);
 
+    play_music(bg_mus_id, -1);
+
     return 0;
 
 }
@@ -161,7 +166,7 @@ int start_gameplay(gps_assets_t *assets)
 
 #define key_delay_2 0.125f
 
-int update_gameplay(float dt)
+int tupdate_gameplay(float dt)
 {
 
     update_key_delays(&key_delay_default_list, dt);
@@ -330,7 +335,7 @@ void print_sdl_rect(SDL_Rect rect)
     printf("X: %d, Y: %d, Width: %d, Height: %d\n", rect.x, rect.y, rect.w, rect.h);
 }
 
-int render_gameplay(float dt)
+int trender_gameplay(float dt)
 {
 
     int output_value = 0x0;
@@ -389,7 +394,7 @@ int render_gameplay(float dt)
 }
 
 
-int late_update_gameplay(float dt)
+int tlate_update_gameplay(float dt)
 {
 
 
@@ -399,7 +404,7 @@ int late_update_gameplay(float dt)
 }
 
 
-void quit_gameplay(void)
+void tquit_gameplay(void)
 {
 
     if (gameplay_board             != NULL) destroy_gps_board(gameplay_board);

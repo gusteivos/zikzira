@@ -64,4 +64,5 @@ gps_format_t *rmv_format_from_gps_assets(gps_assets_t *assets, int format_index)
 
 
     return removed_format;
+    
 }
