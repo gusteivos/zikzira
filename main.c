@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
                     case SDL_WINDOWEVENT_EXPOSED:
                         
-                        main_try_render(window);
+                            main_try_render(window);
                         
                         break;
 
@@ -147,7 +147,10 @@ int main(int argc, char *argv[])
 
         update_renderer_attributes();
 
-        main_try_render           (window);
+
+
+            main_try_render           (window);
+
 
         SDL_Delay(1);
 
@@ -213,38 +216,23 @@ void main_try_render(SDL_Window *window_)
 static void set_working_directory_to_binary_directory()
 {
 
-    char current_binary_directory[MAX_PATH];
+    char *current_binary_directory = SDL_GetBasePath();
 
-#ifdef _WIN32
-
-    GetModuleFileName(NULL, current_binary_directory, sizeof(current_binary_directory));
-
-    char *last_backslash = strrchr(current_binary_directory, '\\');
-
-    if (last_backslash != NULL) *last_backslash = '\0';
-
-#else
-    
-    char executable_path[PATH_MAX];
-
-    ssize_t executable_path_length = readlink("/proc/self/exe", executable_path, sizeof(executable_path) - 1);
-
-    if (executable_path_length != -1)
+    if (current_binary_directory == NULL)
     {
 
-        executable_path[executable_path_length] = '\0';
-
-        char *last_slash = strrchr(executable_path, '/');
-
-        if (last_slash != NULL) *last_slash = '\0';
+        fprintf(stderr, "TODO.\n");
+  
+        return;
 
     }
 
-    realpath(executable_path, current_binary_directory);
+    if (chdir(current_binary_directory) != 0)
+    {
 
-#endif
+        fprintf(stderr, "Failed to set working directory.\n");
 
-    if (chdir(current_binary_directory) != 0) fprintf(stderr, "Failed to set working directory\n");
+    }
 
     return;
 

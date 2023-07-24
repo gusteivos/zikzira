@@ -155,36 +155,35 @@ int start_gameplay(gps_assets_t *assets)
 
 }
 
-#define key_delay_0 0.050f
+#define key_delay_0 0.150f
 
 #define key_delay_1 0.075f
+
+#define key_delay_2 0.125f
 
 int update_gameplay(float dt)
 {
 
     update_key_delays(&key_delay_default_list, dt);
 
-    // if (gameplay_next_pieces_board != NULL) destroy_gps_board(gameplay_next_pieces_board);
-
-    // randomize_next_pieces_board(5);
-
     if (kb_state[SDL_SCANCODE_A] && x > 0)
     {
 
-        if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_A, key_delay_0))
-            x--;
+        if (get_gps_board_a(gameplay_board, x - 1, y) == GPS_BOARD_CLEANING_A_VALUE)
+            if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_A, key_delay_0))
+                x--;
 
     }
 
     if (kb_state[SDL_SCANCODE_D] && x < gameplay_board->width - 1)
     {
 
-        if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_D, key_delay_0))
-            x++;
+        if (get_gps_board_a(gameplay_board, x + 1, y) == GPS_BOARD_CLEANING_A_VALUE)
+            if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_D, key_delay_0))
+                x++;
 
     }
 
-    // && y < gameplay_board->height - 1
 
     if (kb_state[SDL_SCANCODE_S])
     {
@@ -192,25 +191,25 @@ int update_gameplay(float dt)
         if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_S, key_delay_1))
         {
 
-            // y++;
-
             down_timer_count = 0;
 
         }
 
     }
 
-    //  && y > 0
-
     if (kb_state[SDL_SCANCODE_W])
     {
 
-        if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_W, key_delay_1))
+        if (add_key_delay(&key_delay_default_list, SDL_SCANCODE_W, key_delay_2))
         {
 
-            // y--;
+            int a = get_gps_board_a(gameplay_pieces_board, 0, 1);
 
+            set_gps_board_a(gameplay_pieces_board, 0, 1, get_gps_board_a(gameplay_pieces_board, 0, 0));
             
+            set_gps_board_a(gameplay_pieces_board, 0, 0, get_gps_board_a(gameplay_pieces_board, 0, 2));
+
+            set_gps_board_a(gameplay_pieces_board, 0, 2, a);
 
         }
 
@@ -239,30 +238,6 @@ int update_gameplay(float dt)
 
     if (bb)
     {
-
-        if (down_timer_count <= 0)
-        {
-
-            down_timer_count = down_timer;
-
-            y++;
-
-            if (y > gameplay_board->height - 1)
-            {
-
-                y = -1;
-
-                
-
-            }
-
-        }
-        else
-        {
-
-            down_timer_count -= dt;
-
-        }
 
         clear_gps_board_c(gameplay_board);
 
@@ -301,6 +276,44 @@ remove:
         }
 
         fill_gameplay_board_holes();
+
+        if (down_timer_count <= 0)
+        {
+
+            down_timer_count = down_timer;
+
+            if (y >= gameplay_board->height - 1 || get_gps_board_a(gameplay_board, x, y + 1) != GPS_BOARD_CLEANING_A_VALUE)
+            {
+
+                for (int _y = gameplay_pieces_board->height; _y > 0; _y--)
+                {
+
+                    for (int _x = 0; _x < gameplay_pieces_board->width; _x++)
+                    {
+
+                        set_gps_board_a(gameplay_board, _x + x, (_y - 1) + (y - (gameplay_pieces_board->height - 1)), get_gps_board_a(gameplay_pieces_board, _x, _y - 1));
+
+                    }
+
+                }
+ 
+                gameplay_pieces_board = gameplay_next_pieces_board;
+
+                randomize_next_pieces_board(5);
+
+                y = -1;
+
+            }
+        
+            y++;
+
+        }
+        else
+        {
+
+            down_timer_count -= dt;
+
+        }
 
     }
 
@@ -550,14 +563,14 @@ int render_gameplay_pieces_board()
             for (int _x = 0; _x < gameplay_pieces_board->width; _x++)
             {
 
-                int board_cell_type = get_gps_board_a(gameplay_next_pieces_board, _x, _y);
+                int board_cell_type = get_gps_board_a(gameplay_pieces_board, _x, _y);
 
                 if (board_cell_type != GPS_BOARD_CLEANING_A_VALUE)
                 {
 
                     sprite_t *board_cell_type_sprite   = gameplay_assets->format_list[board_cell_type]->spr->spr;
 
-                    SDL_FPoint board_cell_type_position = get_gps_board_b(gameplay_next_pieces_board, _x, _y);
+                    SDL_FPoint board_cell_type_position = get_gps_board_b(gameplay_pieces_board, _x, _y);
 
                     board_cell_type_sprite->destination_rectangle.x = of_set_x + ((board_cell_type_position.x + x) * board_cell_type_sprite->destination_rectangle.w);
                     board_cell_type_sprite->destination_rectangle.y = of_set_y + ((board_cell_type_position.y + y) * board_cell_type_sprite->destination_rectangle.h);
