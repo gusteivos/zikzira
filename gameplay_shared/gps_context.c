@@ -32,6 +32,9 @@ void destroy_gps_context(gps_context_t *ctx)
 
     if (ctx == NULL) return;
 
+        /*Todo: */
+    
+    ctx = NULL;
 
 
     return;

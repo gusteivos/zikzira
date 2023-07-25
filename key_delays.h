@@ -14,17 +14,26 @@
 
         float delay;
 
-
         struct key_delay *next;
 
     } key_delay_t;
 
+
     extern key_delay_t *key_delay_default_list;
 
-    key_delay_t *create_key_delay(Uint8 key, float delay);
-    void destroy_key_delay_list(key_delay_t *head);
-    bool add_key_delay(key_delay_t **head, Uint8 key, float delay);
-    void remove_key_delay(key_delay_t **head, Uint8 key);
-    void update_key_delays(key_delay_t **head, float delta);
+
+    extern key_delay_t *create_key_delay(Uint8 key, float delay);
+    
+
+    extern bool add_key_delay    (key_delay_t **head, Uint8 key, float delay);
+    
+    extern void remove_key_delay (key_delay_t **head, Uint8 key);
+    
+    extern void update_key_delays(key_delay_t **head, float delta_time);
+
+
+    extern void destroy_key_delay(key_delay_t *key);
+
+    extern void destroy_key_delay_list(key_delay_t *head);
 
 #endif

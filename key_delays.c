@@ -1,30 +1,29 @@
 #include "key_delays.h"
 
+
 key_delay_t *key_delay_default_list = NULL;
+
 
 key_delay_t *create_key_delay(Uint8 key, float delay)
 {
+
     key_delay_t *new_key_delay = (key_delay_t *)malloc(sizeof(key_delay_t));
+
     if (new_key_delay != NULL)
     {
+
         new_key_delay->key = key;
+
         new_key_delay->delay = delay;
+
         new_key_delay->next = NULL;
+
     }
+
     return new_key_delay;
-}
-
-void destroy_key_delay_list(key_delay_t *head)
-{
-
-    while (head != NULL)
-    {
-        key_delay_t *temp = head;
-        head = head->next;
-        free(temp);
-    }
 
 }
+
 
 bool add_key_delay(key_delay_t **head, Uint8 key, float delay)
 {
@@ -93,6 +92,31 @@ void remove_key_delay(key_delay_t **head, Uint8 key)
     }
 }
 
+void remove_all_key_delays(key_delay_t **head, Uint8 key) {
+    key_delay_t *current = *head;
+    key_delay_t *prev = NULL;
+
+    while (current != NULL) {
+        if (current->key == key) {
+            key_delay_t *temp = current;
+
+            if (prev != NULL) {
+                prev->next = current->next;
+                current = prev->next;
+            } else {
+                *head = current->next;
+                current = *head;
+            }
+
+            free(temp);
+        } else {
+            prev = current;
+            current = current->next;
+        }
+    }
+}
+
+
 void update_key_delays(key_delay_t **head, float delta)
 {
 
@@ -129,6 +153,37 @@ void update_key_delays(key_delay_t **head, float delta)
                 current = current->next;
             }
         }
+
+    }
+
+}
+
+
+void destroy_key_delay(key_delay_t *key)
+{
+
+    if (key == NULL) return;
+
+    free(key);
+
+    key = NULL;
+
+
+    return;
+
+}
+
+void destroy_key_delay_list(key_delay_t *head)
+{
+
+    while (head != NULL)
+    {
+
+        key_delay_t *temp = head;
+
+        head = head->next;
+
+        free(temp);
 
     }
 

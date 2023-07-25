@@ -1,6 +1,6 @@
 
-#ifndef GAMEPLAY_H
-#define GAMEPLAY_H
+#ifndef GAMEPLAY_H_
+#define GAMEPLAY_H_
 
     #include "input.h"
     #include "music.h"

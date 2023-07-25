@@ -12,14 +12,17 @@
 
     typedef struct gps_format
     {
-    
+
         sprite_anim_t *spr;
 
-        /*Todo: */
+        int sound_id;
 
     } gps_format_t;
-    
+
 
     extern gps_format_t *create_gps_format(bool animated, sprite_anim_t *spr);
+
+
+    extern void destroy_gps_format(gps_format_t *format);
 
 #endif

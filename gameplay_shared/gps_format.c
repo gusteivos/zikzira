@@ -35,6 +35,24 @@ gps_format_t *create_gps_format(bool animated, sprite_anim_t *spr)
     new_format->spr->can_animate = animated;
 
 
+    new_format->sound_id = -1;
+
+
     return new_format;
+
+}
+
+
+void destroy_gps_format(gps_format_t *format)
+{
+
+    if (format == NULL) return;
+
+        /*Todo: */
+
+    format = NULL;
+
+
+    return;
 
 }

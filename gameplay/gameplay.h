@@ -11,12 +11,16 @@
     #include <window.h>
     #include <renderer.h>
 
+    #include <gameplay_shared/gps_context.h>
+    #include <gameplay_shared/gps_board.h>
 
     
+    extern gps_context_t *gameplay_context;
 
 
-    extern void reset_gameplay();
+    extern void reset_gameplay(void);
     
+
     extern int start_gameplay(gps_context_t *context);
 
 

@@ -41,6 +41,6 @@
     extern gps_context_t *create_gps_context(sprite_anim_t *bg_canvas, sprite_anim_t *gp_board_frame);
 
 
-    extern void destroy_gps_context();
+    extern void destroy_gps_context(gps_context_t *ctx);
 
 #endif
