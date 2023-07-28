@@ -12,7 +12,7 @@ sprite_anim_t *load_sprite_anim(const char *path, SDL_Rect src_rect, int num_fra
     if (new_anim == NULL)
     {
 
-        fprintf(stderr, "");
+        fprintf(stderr, "TODO: ");
 
         if (new_spr != NULL) destroy_sprite(new_spr);
 

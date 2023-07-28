@@ -4,8 +4,18 @@
 
     #include "assets.h"
 
-    #include <gameplay.h>
-    
+    #include <gameplay/gameplay.h>
+
+    // TODO:
+        // enum gameloop_rendering_sync_type
+        // {
+
+        //     PER_GAMELOOP_SYNC,
+        //     PER_RENDERLOOP_SYNC,
+        //     PER_FULL_LOOK_SYNC
+
+        // };
+
 
     extern bool   gameloop_is_running;
 

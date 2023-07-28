@@ -17,9 +17,18 @@ gps_context_t *create_gps_context(sprite_anim_t *bg_canvas, sprite_anim_t *gp_bo
 
     }
 
+    new_ctx->background_canvas_x_offset = 0;
+
+    new_ctx->background_canvas_y_offset = 0;
+
     new_ctx->background_canvas = bg_canvas;
 
-    new_ctx->gameplay_board_frame = gp_board_frame;
+
+    new_ctx->board_x_offset = 0;
+
+    new_ctx->board_y_offset = 0;
+
+    new_ctx->board_frame = gp_board_frame;
 
 
     return new_ctx;

@@ -22,11 +22,11 @@
         sprite_anim_t *background_canvas;
 
 
-        uint16_t gameplay_board_x_offset;
+        uint16_t board_x_offset;
 
-        uint16_t gameplay_board_y_offset;
+        uint16_t board_y_offset;
 
-        sprite_anim_t *gameplay_board_frame;
+        sprite_anim_t *board_frame;
 
 
         sprite_t *in_cursor;

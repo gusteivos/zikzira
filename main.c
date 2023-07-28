@@ -69,6 +69,8 @@ int main(int argc, char *argv[])
     setup_keyboard();
 
 
+    SDL_SetThreadPriority(SDL_THREAD_PRIORITY_LOW);
+
     if ((gameloop_thread = SDL_CreateThread(gameloop_thread_routine, "gameloop thread", NULL)) == NULL)
     {
         
@@ -88,6 +90,9 @@ int main(int argc, char *argv[])
 
     }
 
+
+    SDL_SetWindowTitle(window, GAME_NAME);
+    
 
     SDL_Event event;
 
@@ -155,11 +160,25 @@ int main(int argc, char *argv[])
 
             }
 
+
         update_renderer_attributes();
 
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        
+        SDL_RenderClear(renderer);
 
-            main_try_render           (window);
+        // if (SDL_TryLockMutex(renderer_mutex) == 0)
+        {
 
+            SDL_LockMutex(renderer_mutex);
+
+            render_surface_in_renderer(rendering_surface, renderer);
+
+            SDL_UnlockMutex(renderer_mutex);
+
+        }
+
+        SDL_RenderPresent(renderer);
 
         SDL_Delay(1);
 
@@ -182,39 +201,77 @@ int main(int argc, char *argv[])
 
 }
 
-void main_try_render(SDL_Window *window_)
+void render_surface_in_renderer(SDL_Surface *surface_, SDL_Renderer *renderer_)
 {
 
-    if (SDL_TryLockMutex(renderer_mutex) == 0)
+    if (surface_ != NULL && renderer_ != NULL)
     {
 
-        // if (SDL_TryLockMutex(rendering_surface_mutex) == 0)
+        SDL_Texture *texture_from_surface_ = SDL_CreateTextureFromSurface(renderer_, surface_);
+
+        if (texture_from_surface_ == NULL)
         {
 
-            SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, rendering_surface);
+            printf("Failed to create texture_from_surface_: %s\n", SDL_GetError());
 
-            if (texture == NULL)
-                printf("Failed to create texture: %s\n", SDL_GetError());
-            else
-            {
+        }
+        else
+        {
 
-                SDL_RenderClear(renderer);
+            SDL_RenderCopy(renderer_, texture_from_surface_, NULL, NULL);
 
-                SDL_RenderCopy(renderer, texture, NULL, NULL);
+            SDL_RenderPresent(renderer_);
 
-                SDL_RenderPresent(renderer);
-
-                SDL_DestroyTexture(texture);
-
-            }
-
-            // SDL_UnlockMutex(rendering_surface_mutex);
+            SDL_DestroyTexture(texture_from_surface_);
 
         }
 
-        SDL_UnlockMutex(renderer_mutex);
+    }
+    else
+    {
+
+        fprintf(stderr, "TODO: ");
 
     }
+
+
+    return;
+
+}
+
+void main_try_render(SDL_Window *window_)
+{
+
+    // if (SDL_TryLockMutex(renderer_mutex) == 0)
+    // {
+
+    //     // if (SDL_TryLockMutex(rendering_surface_mutex) == 0)
+    //     {
+
+    //         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, rendering_surface);
+
+    //         if (texture == NULL)
+    //             printf("Failed to create texture: %s\n", SDL_GetError());
+    //         else
+    //         {
+
+    //             SDL_RenderClear(renderer);
+
+    //             SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+    //             SDL_RenderPresent(renderer);
+
+    //             SDL_DestroyTexture(texture);
+
+    //         }
+
+    //         // SDL_UnlockMutex(rendering_surface_mutex);
+
+    //     }
+
+    //     SDL_UnlockMutex(renderer_mutex);
+
+    // }
 
     return;
 
