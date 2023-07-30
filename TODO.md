@@ -1,6 +1,4 @@
 
-#  change gps_assets to gps_context
+# rewrite the rendering stuff
 
 ## pieces flashing system
-
-#### rewrite the rendering stuff

@@ -1,7 +1,12 @@
 #include "gameloop.h"
 
 
-Sint64 gameloop_target_fps = 500;
+Sint64 gameloop_target_fps = 1000;
+
+
+bool   gameloop_enable_render_sync_variable = true;
+
+volatile bool gameloop_can_render = false;
 
 bool   gameloop_is_running = false;
 
@@ -56,29 +61,34 @@ int gameloop_thread_routine(void *argument)
 
         gameloop_update(u_dt);
 
-        if (SDL_TryLockMutex(renderer_mutex) == 0)
-        {
 
-            // SDL_LockMutex(renderer_mutex);
+        if (gameloop_can_render == true || !gameloop_enable_render_sync_variable)
+            if (SDL_TryLockMutex(renderer_mutex) == 0)
+            {
 
-            render_current_frame_time = SDL_GetPerformanceCounter();
+                // SDL_LockMutex(renderer_mutex);
 
-            render_delta_time = ((double)render_current_frame_time - (double)render_previous_frame_time) / (double)performance_frequency;
+                render_current_frame_time = SDL_GetPerformanceCounter();
+
+                render_delta_time = ((double)render_current_frame_time - (double)render_previous_frame_time) / (double)performance_frequency;
+                
+                render_previous_frame_time = render_current_frame_time;
+
+                float r_dt = (float)render_delta_time;
+
+                /*printf("r_dt: %f\n", r_dt); */
+
+                gameloop_render(r_dt);
+
+                // printf("fps: %f\n", 1.0f / r_dt);
+
+
+                gameloop_can_render = false;
             
-            render_previous_frame_time = render_current_frame_time;
 
-            float r_dt = (float)render_delta_time;
+                SDL_UnlockMutex(renderer_mutex);
 
-            /*printf("r_dt: %f\n", r_dt); */
-
-            gameloop_render(r_dt);
-
-            printf("fps: %f\n", 1.0f / r_dt);
-
-
-            SDL_UnlockMutex(renderer_mutex);
-
-        }
+            }
 
 
         gameloop_late_update(u_dt);
@@ -98,64 +108,6 @@ int gameloop_thread_routine(void *argument)
 }
 
 
-// void gameloop_start()
-// {
-
-//     gps_assets_t *assets = create_gps_assets();
-
-//     for (int i = 0; i < 5; i++)
-//     {
-    
-//         char filename[100];
-
-//         snprintf(filename, sizeof(filename), "format-%d.png", i + 1);
-
-//         char *image_path = get_image_path_from_assets("formats/16bits/", filename);
-
-//         sprite_t *spr = load_sprite(image_path);
-
-//         sprite_anim_t *aspr = create_sprite_anim(spr, spr->source_rectangle, 1, 0.0f);
-
-//         add_format_on_gps_assets(assets, create_gps_format(false, aspr));
-
-//         free(image_path);
-    
-//     }
-
-//     /*Temp: */
-//         char *image_path = get_image_path_from_assets("", "canvas-2.png");
-
-//         sprite_anim_t *canvas = load_sprite_anim(image_path, rendering_surface_rect, 8, 0.150);
-
-//         canvas->spr->destination_rectangle = rendering_surface_rect;
-
-//         assets->background_canvas = canvas;
-
-//         free(image_path);
-
-//         image_path = get_image_path_from_assets("", "xcursor.png");
-
-//         assets->x_cursor = load_sprite(image_path);
-
-//         free(image_path);
-
-//         image_path = get_image_path_from_assets("", "ycursor.png");
-
-//         assets->y_cursor = load_sprite(image_path);
-
-//         free(image_path);
-
-//         image_path = get_image_path_from_assets("", "incursor.png");
-
-//         assets->in_cursor = load_sprite(image_path);
-
-//         free(image_path);
-        
-
-//     tstart_gameplay(assets);
-
-// }
-
 void gameloop_start()
 {
  
@@ -172,10 +124,42 @@ void gameloop_start()
     single_gp_ctx->background_canvas_x_offset = 0;
     single_gp_ctx->background_canvas_y_offset = 0;
 
-    single_gp_ctx->board_x_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.w * 0.5) - (single_gp_ctx->board_frame->spr->destination_rectangle.w * 0.5);
-    single_gp_ctx->board_y_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.h * 0.5) - (single_gp_ctx->board_frame->spr->destination_rectangle.h * 0.5);
+    single_gp_ctx->board_frame_x_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.w / 2) - (single_gp_ctx->board_frame->spr->destination_rectangle.w / 2);
+    single_gp_ctx->board_frame_y_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.h / 2) - (single_gp_ctx->board_frame->spr->destination_rectangle.h / 2);
+
+    single_gp_ctx->board_x_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.w / 2) - (96  / 2);
+    single_gp_ctx->board_y_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.h / 2) - (208 / 2);
+
+    
+    for (int i = 0; i < 5; i++)
+    {
+    
+        char filename[128];
+
+        snprintf(filename, sizeof(filename), "format-%d.png", i + 1);
+
+        char *image_path = get_image_path_from_assets("formats/default/", filename);
+
+        sprite_t *spr = load_sprite(image_path);
+
+        sprite_anim_t *aspr = create_sprite_anim(spr, spr->source_rectangle, 1, 0.0f);
+
+        add_format_on_gps_context(single_gp_ctx,  create_gps_format(false, aspr));
+    
+    }
 
 
+    char *image_path = get_image_path_from_assets("", "xcursor.png");
+
+    single_gp_ctx->x_cursor = load_sprite(image_path);
+
+    image_path = get_image_path_from_assets("", "ycursor.png");
+
+    single_gp_ctx->y_cursor = load_sprite(image_path);
+
+    image_path = get_image_path_from_assets("", "incursor.png");
+
+    single_gp_ctx->i_cursor = load_sprite(image_path);
 
 
     start_gameplay(single_gp_ctx);
@@ -184,6 +168,18 @@ void gameloop_start()
 
 void gameloop_update(float dt)
 {
+
+    if (kb_state[SDL_SCANCODE_K])
+    {
+
+        if (add_key_delay_on_list(&key_delay_default_list, SDL_SCANCODE_K, 1.0f))
+        {
+
+            gameloop_enable_render_sync_variable = !gameloop_enable_render_sync_variable;
+
+        }
+
+    }    
 
     update_gameplay(dt);
 
@@ -198,6 +194,8 @@ void gameloop_render(float dt)
 
 void gameloop_late_update(float dt)
 {
+
+    update_key_delays_in_list(&key_delay_default_list, dt);
 
     late_update_gameplay(dt);
 

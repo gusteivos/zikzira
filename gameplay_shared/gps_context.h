@@ -10,7 +10,7 @@
     typedef struct gps_context
     {
 
-        int            format_list_size;
+        int            format_list_length;
 
         gps_format_t **format_list;
 
@@ -26,10 +26,15 @@
 
         uint16_t board_y_offset;
 
+
+        uint16_t board_frame_x_offset;
+
+        uint16_t board_frame_y_offset;
+
         sprite_anim_t *board_frame;
 
 
-        sprite_t *in_cursor;
+        sprite_t *i_cursor;
 
         sprite_t *x_cursor;
 
@@ -39,6 +44,12 @@
 
 
     extern gps_context_t *create_gps_context(sprite_anim_t *bg_canvas, sprite_anim_t *gp_board_frame);
+
+
+    extern void add_format_on_gps_context(gps_context_t *ctx, gps_format_t *format);
+
+
+    extern gps_format_t *rmv_format_from_gps_context(gps_context_t *ctx, int index);
 
 
     extern void destroy_gps_context(gps_context_t *ctx);

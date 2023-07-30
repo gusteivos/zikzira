@@ -18,6 +18,9 @@
     extern gps_context_t *gameplay_context;
 
 
+    extern gps_board_t *gameplay_board;
+
+
     extern void reset_gameplay(void);
     
 

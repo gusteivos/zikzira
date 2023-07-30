@@ -26,7 +26,7 @@ gps_board_t *create_gps_board(int width, int height)
     }
 
 
-    new_board->width  = width ;
+    new_board->width  = width;
 
     new_board->height = height;
 

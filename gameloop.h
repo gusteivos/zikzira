@@ -6,21 +6,14 @@
 
     #include <gameplay/gameplay.h>
 
-    // TODO:
-        // enum gameloop_rendering_sync_type
-        // {
 
-        //     PER_GAMELOOP_SYNC,
-        //     PER_RENDERLOOP_SYNC,
-        //     PER_FULL_LOOK_SYNC
-
-        // };
-
+    extern bool   gameloop_enable_render_sync_variable;
 
     extern bool   gameloop_is_running;
 
-    extern Sint64 gameloop_target_fps;
+    extern volatile bool gameloop_can_render;
 
+    extern Sint64 gameloop_target_fps;
 
     extern SDL_Thread *gameloop_thread;
 
