@@ -1,14 +1,23 @@
 #include "gameplay.h"
 
 
+static key_delay_t *key_delay_gameplay_list = NULL;
+
+
 gps_context_t *gameplay_context = NULL;
 
 
 gps_board_t *gameplay_board = NULL;
 
 
+gps_board_t *gameplay_next_pieces = NULL;
+
+
 void reset_gameplay()
 {
+
+    key_delay_gameplay_list = NULL;
+
 
     gameplay_context = NULL;
 
@@ -50,10 +59,24 @@ int start_gameplay(gps_context_t *context)
 
     // clear_gps_board_a(gameplay_board);
 
+        clear_gps_board_a_value(gameplay_board, 0);
+
     clear_gps_board_b(gameplay_board);
 
     clear_gps_board_c(gameplay_board);
 
+    /*Temp: */
+        
+        gameplay_next_pieces = create_gps_board(1, 3);
+
+            // clear_gps_board_a(gameplay_next_pieces);
+
+                clear_gps_board_a_value(gameplay_next_pieces, 1);
+
+        clear_gps_board_b(gameplay_next_pieces);
+
+        clear_gps_board_c(gameplay_next_pieces);
+        
 
     return 0;
 
@@ -63,6 +86,13 @@ int start_gameplay(gps_context_t *context)
 int update_gameplay     (float dt)
 {
 
+
+
+    if (gameplay_context->background_canvas != NULL)
+        update_sprite_anim(gameplay_context->background_canvas, dt);
+
+    if (gameplay_context->board_frame != NULL)
+        update_sprite_anim(gameplay_context->board_frame, dt);
 
 
     return 0;
@@ -83,7 +113,7 @@ int render_gameplay     (float dt)
 
 
         if (SDL_BlitScaled(gameplay_context->background_canvas->spr->surface
-                        , &gameplay_context->background_canvas->spr->source_rectangle
+                        , NULL
                         ,  rendering_surface
                         , &background_canvas_destination_rectangle) != 0)
         {
@@ -110,7 +140,7 @@ int render_gameplay     (float dt)
 
 
         if (SDL_BlitScaled(gameplay_context->board_frame->spr->surface
-                        , &gameplay_context->board_frame->spr->source_rectangle
+                        , NULL
                         ,  rendering_surface
                         , &board_frame_destination_rectangle) != 0)
         {
@@ -124,45 +154,45 @@ int render_gameplay     (float dt)
         }
 
     }
-    
 
-    if (gameplay_board != NULL)
+
+    if (gameplay_context->next_pieces_frame != NULL)
     {
 
-        for (int y = 0; y < gameplay_board->height; y++)
-            for (int x = 0; x < gameplay_board->width; x++)
-            {
+        SDL_Rect next_pieces_frame_destination_rectangle = gameplay_context->next_pieces_frame->spr->destination_rectangle;
 
-                int cell_type = get_gps_board_a(gameplay_board, x, y);
+        next_pieces_frame_destination_rectangle.x += gameplay_context->next_pieces_frame_x_offset;
 
-                if (cell_type != GPS_BOARD_CLEANING_A_VALUE)
-                {
-
-                    sprite_t *cell_type_sprite = gameplay_context->format_list[(cell_type + 1) % gameplay_context->format_list_length]->spr->spr;
+        next_pieces_frame_destination_rectangle.y += gameplay_context->next_pieces_frame_y_offset;
 
 
-                    SDL_FPoint cell_type_sprite_position = get_gps_board_b(gameplay_board, x, y);
+        if (SDL_BlitScaled(gameplay_context->next_pieces_frame->spr->surface
+                        ,  NULL
+                        ,  rendering_surface
+                        , &next_pieces_frame_destination_rectangle) != 0)
+        {
 
+#ifndef NDEBUG
 
-                    SDL_Rect  cell_type_destination_rectangle = cell_type_sprite->destination_rectangle;
+        fprintf(stderr, "The board_frame reeds cannot be rendered, %s.\n", SDL_GetError());
 
-                    cell_type_destination_rectangle.x += gameplay_context->board_x_offset;
+#endif
 
-                    cell_type_destination_rectangle.y += gameplay_context->board_y_offset;
-
-                    cell_type_destination_rectangle.x += x * cell_type_destination_rectangle.w;
-
-                    cell_type_destination_rectangle.y += y * cell_type_destination_rectangle.h;
-
-
-                    SDL_BlitScaled(cell_type_sprite->surface, &cell_type_sprite->source_rectangle, rendering_surface, &cell_type_destination_rectangle);
-
-
-                }
-
-            }
+        }
 
     }
+
+    
+    render_gps_board_with_offset(rendering_surface, gameplay_board,
+                                 gameplay_context->board_x_offset, gameplay_context->board_y_offset,
+                                 gameplay_context->format_list_length, gameplay_context->format_list,
+                                 false);
+
+
+    render_gps_board_with_offset(rendering_surface, gameplay_next_pieces,
+                                 gameplay_context->next_pieces_x_offset, gameplay_context->next_pieces_y_offset,
+                                 gameplay_context->format_list_length, gameplay_context->format_list,
+                                 false);
 
 
     if (gameplay_context->i_cursor != NULL)
@@ -220,6 +250,7 @@ int render_gameplay     (float dt)
 int late_update_gameplay(float dt)
 {
 
+    update_key_delays_in_list(&key_delay_gameplay_list, dt);
 
 
     return 0;
@@ -230,7 +261,10 @@ int late_update_gameplay(float dt)
 void quit_gameplay()
 {
 
+    destroy_key_delay_list(key_delay_gameplay_list);
+
     destroy_gps_context(gameplay_context);
+
 
     return;
 

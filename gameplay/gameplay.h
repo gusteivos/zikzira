@@ -2,7 +2,7 @@
 #ifndef GAMEPLAY_H
 #define GAMEPLAY_H
 
-    #include <key_delays.h>
+    #include <key_delay.h>
     #include <input.h>
     
     #include <music.h>
@@ -12,7 +12,7 @@
     #include <renderer.h>
 
     #include <gameplay_shared/gps_context.h>
-    #include <gameplay_shared/gps_board.h>
+    #include <gameplay_shared/gps_utils.h>
 
     
     extern gps_context_t *gameplay_context;

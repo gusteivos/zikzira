@@ -33,6 +33,18 @@
 
         sprite_anim_t *board_frame;
 
+        
+        uint16_t next_pieces_x_offset;
+
+        uint16_t next_pieces_y_offset;
+
+
+        uint16_t next_pieces_frame_x_offset;
+
+        uint16_t next_pieces_frame_y_offset;
+
+        sprite_anim_t *next_pieces_frame;
+
 
         sprite_t *i_cursor;
 

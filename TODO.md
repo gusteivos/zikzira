@@ -1,4 +1,6 @@
 
-# rewrite the rendering stuff
+# in the animation system add an individual font rectangle
 
-## pieces flashing system
+## rewrite the rendering stuff
+
+### pieces flashing system

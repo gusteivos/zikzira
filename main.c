@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 
 
     /*Temp: */
-        SDL_SetRenderDrawColor(renderer, 155, 0, 155, 255);
+        SDL_SetRenderDrawColor(renderer, 155, 255, 155, 255);
 
 
     SDL_Event event;

@@ -121,6 +121,12 @@ void gameloop_start()
 
     gps_context_t *single_gp_ctx = create_gps_context(bg_ani, bf_ani);
 
+     
+    sprite_anim_t *npf_ani = load_sprite_anim(get_image_path_from_assets("", "default-next_pieces_frame.png"), (SDL_Rect) { 0, 0, 32, 56 }, 1, 0);
+
+    single_gp_ctx->next_pieces_frame = npf_ani;
+    
+
     single_gp_ctx->background_canvas_x_offset = 0;
     single_gp_ctx->background_canvas_y_offset = 0;
 
@@ -129,6 +135,12 @@ void gameloop_start()
 
     single_gp_ctx->board_x_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.w / 2) - (96  / 2);
     single_gp_ctx->board_y_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.h / 2) - (208 / 2);
+
+    single_gp_ctx->next_pieces_frame_x_offset = single_gp_ctx->board_frame_x_offset + single_gp_ctx->board_frame->spr->destination_rectangle.w + 16;
+    single_gp_ctx->next_pieces_frame_y_offset = single_gp_ctx->board_frame_y_offset + 4;
+
+    single_gp_ctx->next_pieces_x_offset = single_gp_ctx->board_frame_x_offset + single_gp_ctx->board_frame->spr->destination_rectangle.w + 16 + 8;
+    single_gp_ctx->next_pieces_y_offset = single_gp_ctx->board_frame_y_offset + 8;
 
     
     for (int i = 0; i < 5; i++)

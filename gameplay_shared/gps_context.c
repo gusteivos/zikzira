@@ -37,7 +37,13 @@ gps_context_t *create_gps_context(sprite_anim_t *bg_canvas, sprite_anim_t *gp_bo
     new_ctx->board_frame = gp_board_frame;
 
 
+    new_ctx->board_frame_x_offset = 0;
     
+    new_ctx->board_frame_y_offset = 0;
+
+    new_ctx->next_pieces_frame = NULL;
+    
+
     new_ctx->format_list_length = 0;
 
     new_ctx->format_list = NULL;
