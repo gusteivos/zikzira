@@ -62,4 +62,4 @@ target_link_libraries(${CMAKE_PROJECT_NAME} SDL2_image)
 target_link_libraries(${CMAKE_PROJECT_NAME} SDL2_mixer)
 
 
-target_link_libraries(${CMAKE_PROJECT_NAME} m)
+target_link_libraries(${CMAKE_PROJECT_NAME} m winmm)
