@@ -7,15 +7,23 @@
     #include <gameplay/gameplay.h>
 
 
+    #define GAMELOOP_SYNC_BY_MUTEX
+
+    // #define GAMELOOP_SYNC_BY_SPINLOCK
+
+
     extern bool   gameloop_enable_render_sync_variable;
 
     extern bool   gameloop_is_running;
 
-    extern volatile bool gameloop_can_render;
+    extern bool gameloop_can_render;
 
     extern Sint64 gameloop_target_fps;
 
     extern SDL_Thread *gameloop_thread;
+
+
+    extern SDL_SpinLock renderer_spin_lock;
 
 
     extern int gameloop_thread_routine(void *);

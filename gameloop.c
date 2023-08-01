@@ -1,14 +1,17 @@
 #include "gameloop.h"
 
 
-Sint64 gameloop_target_fps = 1000;
+Sint64 gameloop_target_fps = 500;
 
 
 bool   gameloop_enable_render_sync_variable = true;
 
-volatile bool gameloop_can_render = false;
+bool gameloop_can_render = false;
 
 bool   gameloop_is_running = false;
+
+
+SDL_SpinLock renderer_spin_lock = 0;
 
 
 SDL_Thread *gameloop_thread = NULL;
@@ -62,11 +65,34 @@ int gameloop_thread_routine(void *argument)
         gameloop_update(u_dt);
 
 
-        if (gameloop_can_render == true || !gameloop_enable_render_sync_variable)
+        if (!gameloop_enable_render_sync_variable || gameloop_can_render == true)
+        {
+
+#ifdef GAMELOOP_SYNC_BY_MUTEX  
+      
             if (SDL_TryLockMutex(renderer_mutex) == 0)
+
+#endif
+        
+#ifdef GAMELOOP_SYNC_BY_SPINLOCK  
+      
+            if (SDL_AtomicTryLock(&renderer_spin_lock) == SDL_TRUE)
+
+#endif
+
             {
 
+#ifdef GAMELOOP_SYNC_BY_MUTEX  
+      
                 // SDL_LockMutex(renderer_mutex);
+
+#endif
+                
+#ifdef GAMELOOP_SYNC_BY_SPINLOCK
+      
+                // SDL_AtomicLock(&renderer_spin_lock);
+
+#endif
 
                 render_current_frame_time = SDL_GetPerformanceCounter();
 
@@ -80,24 +106,47 @@ int gameloop_thread_routine(void *argument)
 
                 gameloop_render(r_dt);
 
-                // printf("fps: %f\n", 1.0f / r_dt);
+                printf("fps: %f\n", 1.0f / r_dt);
 
 
                 gameloop_can_render = false;
-            
 
+
+#ifdef GAMELOOP_SYNC_BY_MUTEX  
+      
                 SDL_UnlockMutex(renderer_mutex);
 
+#endif
+
+#ifdef GAMELOOP_SYNC_BY_SPINLOCK
+      
+                SDL_AtomicUnlock(&renderer_spin_lock);
+
+#endif
+
+
             }
+
+
+
+        }
 
 
         gameloop_late_update(u_dt);
 
 
-        Sint64 frame_delay = (1000 / gameloop_target_fps) - (Sint64)update_delta_time;
+        // Sint64 frame_delay = (1000 / gameloop_target_fps) - (Sint64)update_delta_time;
 
-        if (frame_delay > 0)
-            SDL_Delay(frame_delay);
+        // if (frame_delay > 0)
+        {
+
+            // utils_msleep(frame_delay);
+            nanodsleep(1000);
+
+            
+            // SDL_Delay(frame_delay);
+
+        }
 
     }
 
@@ -184,10 +233,12 @@ void gameloop_update(float dt)
     if (kb_state[SDL_SCANCODE_K])
     {
 
-        if (add_key_delay_on_list(&key_delay_default_list, SDL_SCANCODE_K, 1.0f))
+        if (add_key_delay_on_list(&key_delay_default_list, SDL_SCANCODE_K, 0.250f))
         {
 
             gameloop_enable_render_sync_variable = !gameloop_enable_render_sync_variable;
+
+            printf("render is %d\n", gameloop_enable_render_sync_variable);
 
         }
 

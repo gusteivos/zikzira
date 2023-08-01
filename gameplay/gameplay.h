@@ -11,6 +11,8 @@
     #include <window.h>
     #include <renderer.h>
 
+    #include <utils.h>
+
     #include <gameplay_shared/gps_context.h>
     #include <gameplay_shared/gps_utils.h>
 
@@ -19,6 +21,9 @@
 
 
     extern gps_board_t *gameplay_board;
+
+
+    extern gps_board_t *gameplay_next_pieces;
 
 
     extern void reset_gameplay(void);

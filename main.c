@@ -168,21 +168,55 @@ int main(int argc, char *argv[])
         update_renderer_attributes();
 
 
-        if (gameloop_can_render == false || !gameloop_enable_render_sync_variable)
+        if (!gameloop_enable_render_sync_variable || gameloop_can_render == false)
         {
 
-            SDL_RenderClear(renderer);
-
+#ifdef GAMELOOP_SYNC_BY_MUTEX  
+      
             if (SDL_TryLockMutex(renderer_mutex) == 0)
+
+#endif
+        
+#ifdef GAMELOOP_SYNC_BY_SPINLOCK  
+      
+            if (SDL_AtomicTryLock(&renderer_spin_lock) == SDL_TRUE)
+
+#endif
+
             {
 
+#ifdef GAMELOOP_SYNC_BY_MUTEX  
+      
                 // SDL_LockMutex(renderer_mutex);
+
+#endif
+                
+#ifdef GAMELOOP_SYNC_BY_SPINLOCK
+      
+                // SDL_AtomicLock(&renderer_spin_lock);
+
+#endif
+
+                SDL_RenderClear(renderer);
 
                 render_surface_in_renderer(rendering_surface, renderer);
 
+
                 gameloop_can_render = true;
 
+                
+#ifdef GAMELOOP_SYNC_BY_MUTEX  
+      
                 SDL_UnlockMutex(renderer_mutex);
+
+#endif
+
+#ifdef GAMELOOP_SYNC_BY_SPINLOCK
+      
+                SDL_AtomicUnlock(&renderer_spin_lock);
+
+#endif
+
 
             }
 

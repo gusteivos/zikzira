@@ -2,8 +2,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-    #include <math.h>
-
     #ifdef _WIN32
 
         #include <direct.h>
@@ -32,8 +30,8 @@
     #include "input.h"
     #include "window.h"
 
-
-    #define WINDOW_TITLE "by gusteivos gp:"
+    
+    #define WINDOW_TITLE "by gusteivos gp."
 
     #define GAME_NAME "zikzira" 
 

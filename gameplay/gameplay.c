@@ -184,63 +184,44 @@ int render_gameplay     (float dt)
 
     
     render_gps_board_with_offset(rendering_surface, gameplay_board,
-                                 gameplay_context->board_x_offset, gameplay_context->board_y_offset,
-                                 gameplay_context->format_list_length, gameplay_context->format_list,
-                                 false);
+                                gameplay_context->board_x_offset, gameplay_context->board_y_offset,
+                                gameplay_context->format_list_length, gameplay_context->format_list,
+                                false);
 
 
     render_gps_board_with_offset(rendering_surface, gameplay_next_pieces,
-                                 gameplay_context->next_pieces_x_offset, gameplay_context->next_pieces_y_offset,
-                                 gameplay_context->format_list_length, gameplay_context->format_list,
-                                 false);
+                                gameplay_context->next_pieces_x_offset, gameplay_context->next_pieces_y_offset,
+                                gameplay_context->format_list_length, gameplay_context->format_list,
+                                false);
+
 
 
     if (gameplay_context->i_cursor != NULL)
     {
 
-        SDL_Rect i_cursor_destination_rectangle = gameplay_context->i_cursor->destination_rectangle;
-
-        i_cursor_destination_rectangle.x += gameplay_context->board_x_offset;
-
-        i_cursor_destination_rectangle.y += gameplay_context->board_y_offset;
-
-
-        SDL_BlitScaled(gameplay_context->i_cursor->surface, &gameplay_context->i_cursor->source_rectangle, rendering_surface, &i_cursor_destination_rectangle);
-
+        render_surface_in_surface_with_offset(gameplay_context->i_cursor->surface, &gameplay_context->i_cursor->source_rectangle,
+                                            rendering_surface, &gameplay_context->i_cursor->destination_rectangle,
+                                            gameplay_context->board_x_offset, gameplay_context->board_y_offset);
+    
     }
 
     if (gameplay_context->x_cursor != NULL)
     {
 
-        SDL_Rect x_cursor_destination_rectangle = gameplay_context->x_cursor->destination_rectangle;
-
-        x_cursor_destination_rectangle.x += gameplay_context->board_x_offset;
-
-        x_cursor_destination_rectangle.y += gameplay_context->board_y_offset;
-    
-        x_cursor_destination_rectangle.y -= gameplay_context->i_cursor->destination_rectangle.h;
-        
-
-        SDL_BlitScaled(gameplay_context->x_cursor->surface, &gameplay_context->x_cursor->source_rectangle, rendering_surface, &x_cursor_destination_rectangle);
+        render_surface_in_surface_with_offset(gameplay_context->x_cursor->surface, &gameplay_context->x_cursor->source_rectangle,
+                                            rendering_surface, &gameplay_context->x_cursor->destination_rectangle,
+                                            gameplay_context->board_x_offset, gameplay_context->board_y_offset - gameplay_context->i_cursor->destination_rectangle.h);
 
     }
 
     if (gameplay_context->y_cursor != NULL)
     {
 
-        SDL_Rect y_cursor_destination_rectangle = gameplay_context->x_cursor->destination_rectangle;
-
-        y_cursor_destination_rectangle.x += gameplay_context->board_x_offset;
-
-        y_cursor_destination_rectangle.y += gameplay_context->board_y_offset;
-    
-        y_cursor_destination_rectangle.x -= gameplay_context->i_cursor->destination_rectangle.w;
-        
-
-        SDL_BlitScaled(gameplay_context->y_cursor->surface, &gameplay_context->y_cursor->source_rectangle, rendering_surface, &y_cursor_destination_rectangle);
+        render_surface_in_surface_with_offset(gameplay_context->y_cursor->surface, &gameplay_context->y_cursor->source_rectangle,
+                                            rendering_surface, &gameplay_context->y_cursor->destination_rectangle,
+                                            gameplay_context->board_x_offset - gameplay_context->i_cursor->destination_rectangle.w, gameplay_context->board_y_offset);
 
     }
-
 
 
     return 0;
