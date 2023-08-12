@@ -225,7 +225,10 @@ int main(int argc, char *argv[])
         }
 
 
-        SDL_Delay(1);
+        // SDL_Delay(1);
+        
+        utils_nano_sleep(1000);
+
 
     }
 

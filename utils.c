@@ -75,6 +75,42 @@ void utils_msleep(long long milliseconds)
 
 }
 
+static long long toInteger(LARGE_INTEGER integer)
+{
+
+#ifdef INT64_MAX
+
+        return integer.QuadPart;
+
+#else
+
+        return (static_cast<long long>(integer.HighPart) << 32) | integer.LowPart;
+
+#endif
+
+}
+
+static LARGE_INTEGER toLargeInteger(long long value)
+{
+    
+    LARGE_INTEGER result;
+
+#ifdef INT64_MAX
+    
+        result.QuadPart = value;
+
+#else
+
+        result.high_part = value & 0xFFFFFFFF00000000;
+
+        result.low_part  = value & 0xFFFFFFFF;
+
+#endif
+    
+    return result;
+
+}
+
 void utils_nsleep(long long nanoseconds)
 {
 
@@ -108,25 +144,79 @@ void utils_nsleep(long long nanoseconds)
 
 }
 
-BOOLEAN nanodsleep(LONGLONG ns)
+bool utils_nano_sleep(long long ns)
 {
-    /* Declarations */
-    HANDLE timer;	/* Timer handle */
-    LARGE_INTEGER li;	/* Time defintion */
-    /* Create timer */
-    if(!(timer = CreateWaitableTimer(NULL, TRUE, NULL)))
-        return FALSE;
-    /* Set timer properties */
-    li.QuadPart = -ns;
-    if(!SetWaitableTimer(timer, &li, 0, NULL, NULL, FALSE)){
-        CloseHandle(timer);
-        return FALSE;
+
+    HANDLE htimer = NULL;
+
+    if ((htimer = CreateWaitableTimer(NULL, TRUE, TEXT("utils_nano_sleep timer"))) == NULL)
+    {
+
+        printf("%d\n", GetLastError());
+
+        return false;
+
     }
-    /* Start & wait for timer */
-    WaitForSingleObject(timer, INFINITE);
-    /* Clean resources */
-    CloseHandle(timer);
-    /* Slept without problems */
-    return TRUE;
+
+
+    LARGE_INTEGER liDueTime = toLargeInteger(-ns);
+
+    if(SetWaitableTimer(htimer, &liDueTime, 0, NULL, NULL, TRUE) == FALSE)
+    {
+
+        CloseHandle(htimer);
+
+        return false;
+
+    }
+
+    
+    WaitForSingleObject(htimer, INFINITE);
+    
+    CloseHandle(htimer);
+
+
+    return true;
+
+}
+
+bool nanodsleep(LONGLONG ns)
+{
+    
+    HANDLE htimer = NULL;
+
+    if((htimer = CreateWaitableTimer(NULL, TRUE, TEXT("nanotimer"))) == NULL)
+    {
+ 
+        printf("CreateWaitableTimer failed with error %d\n", GetLastError());
+        
+        return false;
+    
+    }
+
+
+    LARGE_INTEGER liDueTime;
+
+    liDueTime.LowPart  = (DWORD) ( -ns & 0xFFFFFFFF );
+    liDueTime.HighPart = (LONG)  ( -ns >> 32 );
+    
+
+    if(!SetWaitableTimer(htimer, &liDueTime, 0, NULL, NULL, TRUE))
+    {
+
+        CloseHandle(htimer);
+
+        return false;
+
+    }
+
+
+    WaitForSingleObject(htimer, INFINITE);
+    
+    CloseHandle(htimer);
+
+    
+    return true;
+
 }
 

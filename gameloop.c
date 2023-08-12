@@ -1,7 +1,7 @@
 #include "gameloop.h"
 
 
-Sint64 gameloop_target_fps = 500;
+Sint64 gameloop_target_fps = 60;
 
 
 bool   gameloop_enable_render_sync_variable = true;
@@ -106,8 +106,6 @@ int gameloop_thread_routine(void *argument)
 
                 gameloop_render(r_dt);
 
-                printf("fps: %f\n", 1.0f / r_dt);
-
 
                 gameloop_can_render = false;
 
@@ -135,14 +133,18 @@ int gameloop_thread_routine(void *argument)
         gameloop_late_update(u_dt);
 
 
-        // Sint64 frame_delay = (1000 / gameloop_target_fps) - (Sint64)update_delta_time;
+        double frame_delay = (1000.0 / (double)gameloop_target_fps) - update_delta_time;
 
-        // if (frame_delay > 0)
+
+        printf("fps: %f\n", update_delta_time);
+
+
+        if (frame_delay > 0)
         {
 
             // utils_msleep(frame_delay);
-            nanodsleep(1000);
-
+            
+            utils_nano_sleep((long long)(frame_delay * 10000.0));
             
             // SDL_Delay(frame_delay);
 
