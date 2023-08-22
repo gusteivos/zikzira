@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     while (gameloop_is_running)
     {
 
-        update_mouse();
+        update_mouse((SDL_Point){ 0, 0 });
 
 
         update_window_attributes();
@@ -201,6 +201,7 @@ int main(int argc, char *argv[])
 
                 render_surface_in_renderer(rendering_surface, renderer);
 
+                // SDL_    rendering_surface
 
                 gameloop_can_render = true;
 
@@ -229,11 +230,12 @@ int main(int argc, char *argv[])
         
         utils_nano_sleep(1000);
 
-
     }
 
 
     SDL_WaitThread(gameloop_thread, NULL);
+
+    quit_keyboard();
 
     quit_renderer();
 

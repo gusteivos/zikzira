@@ -3,8 +3,9 @@
 #define GAMEPLAY_H
 
     #include <key_delay.h>
-    #include <input.h>
-    
+    #include <input/keyboard.h>
+    #include <input/mouse.h>
+
     #include <music.h>
     #include <sound.h>
 
@@ -23,7 +24,9 @@
     extern gps_board_t *gameplay_board;
 
 
-    extern gps_board_t *gameplay_next_pieces;
+    extern gps_board_t *gameplay_next_pieces_board;
+
+    extern gps_board_t *gameplay_current_pieces_board;
 
 
     extern void reset_gameplay(void);

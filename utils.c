@@ -14,7 +14,7 @@ float lerp_threshold(float start, float end, float ratio, float threshold)
     float interpolated_value = start + ratio * (end - start);
 
 
-    interpolated_value = (fabsf(interpolated_value) <= threshold) ? end : interpolated_value;
+    interpolated_value = (fabsf(interpolated_value - end) <= threshold) ? end : interpolated_value;
 
 
     return interpolated_value;

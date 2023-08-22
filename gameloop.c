@@ -136,7 +136,7 @@ int gameloop_thread_routine(void *argument)
         double frame_delay = (1000.0 / (double)gameloop_target_fps) - update_delta_time;
 
 
-        printf("fps: %f\n", update_delta_time);
+        // printf("fps: %f\n", update_delta_time);
 
 
         if (frame_delay > 0)
@@ -201,7 +201,7 @@ void gameloop_start()
 
         snprintf(filename, sizeof(filename), "format-%d.png", i + 1);
 
-        char *image_path = get_image_path_from_assets("formats/default/", filename);
+        char *image_path = get_image_path_from_assets("formats/16bits/", filename);
 
         sprite_t *spr = load_sprite(image_path);
 
@@ -231,20 +231,6 @@ void gameloop_start()
 
 void gameloop_update(float dt)
 {
-
-    if (kb_state[SDL_SCANCODE_K])
-    {
-
-        if (add_key_delay_on_list(&key_delay_default_list, SDL_SCANCODE_K, 0.250f))
-        {
-
-            gameloop_enable_render_sync_variable = !gameloop_enable_render_sync_variable;
-
-            printf("render is %d\n", gameloop_enable_render_sync_variable);
-
-        }
-
-    }    
 
     update_gameplay(dt);
 

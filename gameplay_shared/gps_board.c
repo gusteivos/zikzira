@@ -117,7 +117,7 @@ void set_gps_board_a        (gps_board_t *board, int x, int y, int value)
     if (board == NULL || x < 0 || x >= board->width || y < 0 || y >= board->height)
     {
 
-        fprintf(stderr, "");
+        fprintf(stderr, "todo: \n");
 
         return;
 

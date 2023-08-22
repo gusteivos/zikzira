@@ -21,6 +21,7 @@ file(GLOB executable_source_files
     "./*.c"
     "./gameplay_shared/*.c"
     "./gameplay/*.c"
+    "./input/*.c"
 )
 
 set(executable_header_files

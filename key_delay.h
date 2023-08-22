@@ -2,7 +2,7 @@
 #ifndef KEY_DELAYS_H
 #define KEY_DELAYS_H
 
-    #include "input.h"
+    #include <input/keyboard.h>
 
     #include <stdlib.h>
 
