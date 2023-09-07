@@ -22,6 +22,8 @@
         sprite_anim_t *background_canvas;
 
 
+        SDL_Rect board_offset;
+
         uint16_t board_x_offset;
 
         uint16_t board_y_offset;

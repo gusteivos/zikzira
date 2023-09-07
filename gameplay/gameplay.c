@@ -166,7 +166,7 @@ int update_gameplay     (float dt)
     {
 
         if (get_gps_board_a(gameplay_board, current_pieces_cursor_x_position - 1, current_pieces_cursor_y_position) == GPS_BOARD_CLEANING_A_VALUE)
-            if(add_key_delay_on_list(&key_delay_gameplay_list, SDL_SCANCODE_A, 0.150f) == true)
+            if(add_key_delay_on_list(&key_delay_gameplay_list, SDL_SCANCODE_A, 0.175f) == true)
                 current_pieces_cursor_x_position--;
 
     }
@@ -175,7 +175,7 @@ int update_gameplay     (float dt)
     {
 
         if (get_gps_board_a(gameplay_board, current_pieces_cursor_x_position + 1, current_pieces_cursor_y_position) == GPS_BOARD_CLEANING_A_VALUE)
-            if(add_key_delay_on_list(&key_delay_gameplay_list, SDL_SCANCODE_D, 0.150f) == true)
+            if(add_key_delay_on_list(&key_delay_gameplay_list, SDL_SCANCODE_D, 0.175f) == true)
                 current_pieces_cursor_x_position++;
 
     }
@@ -207,11 +207,12 @@ int update_gameplay     (float dt)
         {
 
             if(add_key_delay_on_list(&key_delay_gameplay_list, SDL_SCANCODE_S, 0.175f) == true)
-                current_pieces_fall_down_timer_counter = 0;
+                current_pieces_fall_down_timer_counter = current_pieces_fall_down_timer;
 
         }
 
-        if (current_pieces_fall_down_timer_counter <= 0)
+
+        if (current_pieces_fall_down_timer_counter >= current_pieces_fall_down_timer)
         {
 
             if (current_pieces_cursor_y_position >= gameplay_board->height - 1 ||
@@ -230,11 +231,16 @@ int update_gameplay     (float dt)
 
                 }
 
+
+                *gameplay_next_pieces_board->b = *gameplay_current_pieces_board->b;                
+
                 destroy_gps_board(gameplay_current_pieces_board);
 
                 gameplay_current_pieces_board = gameplay_next_pieces_board;
 
                 gameplay_next_pieces_board = create_gps_board(1, 3);
+
+                clear_gps_board_b(gameplay_next_pieces_board);
 
                 randomize_next_pieces_board();
 
@@ -274,15 +280,38 @@ int update_gameplay     (float dt)
             else
                 current_pieces_cursor_y_position++;
 
-            current_pieces_fall_down_timer_counter = current_pieces_fall_down_timer;
+            current_pieces_fall_down_timer_counter = 0;
 
         }
         else
         {
 
-            current_pieces_fall_down_timer_counter -= dt;
+            current_pieces_fall_down_timer_counter += dt;
 
         }
+
+        
+        double a = map_value(current_pieces_fall_down_timer_counter, 0, current_pieces_fall_down_timer, 0, 1);
+
+        clear_gps_board_b(gameplay_current_pieces_board);
+
+        SDL_FPoint b = get_gps_board_b(gameplay_current_pieces_board, 0, 0);
+
+        b.y += (-1 + a);
+
+        set_gps_board_b(gameplay_current_pieces_board, 0, 0, b);
+
+        b = get_gps_board_b(gameplay_current_pieces_board, 0, 1);
+
+        b.y += (-1 + a);
+
+        set_gps_board_b(gameplay_current_pieces_board, 0, 1, b);
+
+        b = get_gps_board_b(gameplay_current_pieces_board, 0, 2);
+
+        b.y += (-1 + a);
+
+        set_gps_board_b(gameplay_current_pieces_board, 0, 2, b);
 
     }
     else
@@ -446,15 +475,19 @@ int render_gameplay     (float dt)
     }
 
     
-    render_gps_board_with_b_and_offset(rendering_surface, gameplay_board,
-                                       gameplay_context->board_x_offset, gameplay_context->board_y_offset,
+    SDL_Surface *gameplay_board_surface = SDL_CreateRGBSurfaceWithFormat(0, GPS_FORMAT_WIDTH * gameplay_board->width, GPS_FORMAT_WIDTH * gameplay_board->height, 32, rendering_surface_format);
+
+    render_gps_board_with_b_and_offset(gameplay_board_surface, gameplay_board,
+                                       0, 0,
                                        gameplay_context->format_list_length, gameplay_context->format_list,
                                        true);
 
+    SDL_BlitScaled(gameplay_board_surface, NULL, rendering_surface,  &gameplay_context->board_offset);
 
-    render_gps_board_with_offset(rendering_surface, gameplay_current_pieces_board,
-                                gameplay_context->board_x_offset + (GPS_FORMAT_WIDTH  * current_pieces_cursor_x_position),
-                                gameplay_context->board_y_offset + (GPS_FORMAT_HEIGHT * current_pieces_cursor_y_position) - (GPS_FORMAT_HEIGHT * (gameplay_current_pieces_board->height - 1)),
+
+    render_gps_board_with_b_and_offset(rendering_surface, gameplay_current_pieces_board,
+                                gameplay_context->board_offset.x + (GPS_FORMAT_WIDTH  * current_pieces_cursor_x_position),
+                                gameplay_context->board_offset.y + (GPS_FORMAT_HEIGHT * current_pieces_cursor_y_position) - (GPS_FORMAT_HEIGHT * (gameplay_current_pieces_board->height - 1)),
                                 gameplay_context->format_list_length, gameplay_context->format_list,
                                 true);
 
@@ -470,8 +503,8 @@ int render_gameplay     (float dt)
 
         render_surface_in_surface_with_offset(gameplay_context->i_cursor->surface, &gameplay_context->i_cursor->source_rectangle,
                                             rendering_surface, &gameplay_context->i_cursor->destination_rectangle,
-                                            gameplay_context->board_x_offset + gameplay_context->i_cursor->destination_rectangle.w * current_pieces_cursor_x_position,
-                                            gameplay_context->board_y_offset + gameplay_context->i_cursor->destination_rectangle.h * current_pieces_cursor_y_position);
+                                            gameplay_context->board_offset.x + gameplay_context->i_cursor->destination_rectangle.w * current_pieces_cursor_x_position,
+                                            gameplay_context->board_offset.y + gameplay_context->i_cursor->destination_rectangle.h * current_pieces_cursor_y_position);
     
     }
 
@@ -480,8 +513,8 @@ int render_gameplay     (float dt)
 
         render_surface_in_surface_with_offset(gameplay_context->x_cursor->surface, &gameplay_context->x_cursor->source_rectangle,
                                             rendering_surface, &gameplay_context->x_cursor->destination_rectangle,
-                                            gameplay_context->board_x_offset + GPS_FORMAT_WIDTH * current_pieces_cursor_x_position,
-                                            gameplay_context->board_y_offset - gameplay_context->i_cursor->destination_rectangle.h);
+                                            gameplay_context->board_offset.x + GPS_FORMAT_WIDTH * current_pieces_cursor_x_position,
+                                            gameplay_context->board_offset.y - gameplay_context->i_cursor->destination_rectangle.h);
 
     }
 
@@ -490,8 +523,8 @@ int render_gameplay     (float dt)
 
         render_surface_in_surface_with_offset(gameplay_context->y_cursor->surface, &gameplay_context->y_cursor->source_rectangle,
                                             rendering_surface, &gameplay_context->y_cursor->destination_rectangle,
-                                            gameplay_context->board_x_offset - gameplay_context->i_cursor->destination_rectangle.w,
-                                            gameplay_context->board_y_offset + GPS_FORMAT_WIDTH * current_pieces_cursor_y_position);
+                                            gameplay_context->board_offset.x - gameplay_context->i_cursor->destination_rectangle.w,
+                                            gameplay_context->board_offset.y + GPS_FORMAT_WIDTH * current_pieces_cursor_y_position);
 
     }
 
@@ -562,11 +595,11 @@ bool traverse_gameplay_board()
     if (traverse_top_to_bottom_define_c_based_on_a(gameplay_board, 3) == true)
         return true;
 
-    // if (traverse_diagonal_left_to_right_define_c_based_on_a(gameplay_board, 3) == true)
-    //     return true;
+    if (traverse_diagonal_left_to_right_define_c_based_on_a(gameplay_board, 3) == true)
+        return true;
 
-    // if (traverse_diagonal_right_to_left_define_c_based_on_a(gameplay_board, 3) == true)
-    //     return true;
+    if (traverse_diagonal_right_to_left_define_c_based_on_a(gameplay_board, 3) == true)
+        return true;
 
 
     return false;

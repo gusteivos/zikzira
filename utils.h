@@ -31,6 +31,9 @@
     #define RAD_TO_DEG (180.0 / M_PI)
 
     
+    double map_value(double value, double fromMin, double fromMax, double toMin, double toMax);
+
+
     extern float lerp(float start, float end, float ratio);
 
     extern float lerp_threshold(float start, float end, float ratio, float threshold);

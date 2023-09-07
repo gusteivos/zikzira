@@ -1,8 +1,8 @@
 
-#ifndef KEY_DELAYS_H
-#define KEY_DELAYS_H
+#ifndef KEYBOARD_DELAY_H
+#define KEYBOARD_DELAY_H
 
-    #include <input/keyboard.h>
+    #include "keyboard.h"
 
     #include <stdlib.h>
 
@@ -35,5 +35,6 @@
     extern void destroy_key_delay(key_delay_t *key);
 
     extern void destroy_key_delay_list(key_delay_t *head);
+
 
 #endif

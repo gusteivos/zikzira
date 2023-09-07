@@ -34,9 +34,10 @@
     
     #define WINDOW_TITLE "by gusteivos gp and ninca."
 
+
     #define GAME_NAME "zikzira" 
 
 
-    extern void render_surface_in_renderer(SDL_Surface *surface_, SDL_Renderer *renderer_);
+    extern bool init_main(void);
 
 #endif

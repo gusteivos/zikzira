@@ -34,6 +34,6 @@
     extern SDL_Point mouse_relative_point;
 
     
-    extern void update_mouse(SDL_Point mouse_point_offset);
+    extern void update_mouse(void);
 
 #endif

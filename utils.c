@@ -220,3 +220,19 @@ bool nanodsleep(LONGLONG ns)
 
 }
 
+double map_value(double value, double fromMin, double fromMax, double toMin, double toMax)
+{
+
+    if (value < fromMin) {
+        value = fromMin;
+    } else if (value > fromMax) {
+        value = fromMax;
+    }
+
+    double ratio = (value - fromMin) / (fromMax - fromMin);
+
+    double mappedValue = toMin + (toMax - toMin) * ratio;
+
+    return mappedValue;
+    
+}

@@ -2,8 +2,8 @@
 #ifndef GAMEPLAY_H
 #define GAMEPLAY_H
 
-    #include <key_delay.h>
     #include <input/keyboard.h>
+    #include <input/keyboard_delay.h>
     #include <input/mouse.h>
 
     #include <music.h>

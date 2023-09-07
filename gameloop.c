@@ -184,8 +184,13 @@ void gameloop_start()
     single_gp_ctx->board_frame_x_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.w / 2) - (single_gp_ctx->board_frame->spr->destination_rectangle.w / 2);
     single_gp_ctx->board_frame_y_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.h / 2) - (single_gp_ctx->board_frame->spr->destination_rectangle.h / 2);
 
-    single_gp_ctx->board_x_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.w / 2) - (96  / 2);
-    single_gp_ctx->board_y_offset = (single_gp_ctx->background_canvas->spr->destination_rectangle.h / 2) - (208 / 2);
+
+    single_gp_ctx->board_offset.w = 96;
+    single_gp_ctx->board_offset.h = 208;
+
+    single_gp_ctx->board_offset.x = (single_gp_ctx->background_canvas->spr->destination_rectangle.w / 2) - (single_gp_ctx->board_offset.w / 2);
+    single_gp_ctx->board_offset.y = (single_gp_ctx->background_canvas->spr->destination_rectangle.h / 2) - (single_gp_ctx->board_offset.h / 2);
+
 
     single_gp_ctx->next_pieces_frame_x_offset = single_gp_ctx->board_frame_x_offset + single_gp_ctx->board_frame->spr->destination_rectangle.w + 16;
     single_gp_ctx->next_pieces_frame_y_offset = single_gp_ctx->board_frame_y_offset + 4;

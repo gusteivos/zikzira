@@ -1,0 +1,16 @@
+
+compiler:
+    gcc (x86_64-win32-sjlj-rev0, Built by MinGW-W64 project) 8.1.0
+
+libs:
+    SDL2:
+        compiled 2.28.1
+        linked   2.28.1
+
+    SDL_image:
+        compiled 2.6.3
+        linked   2.6.3
+
+    SDL_mixer:
+        compiled 2.6.3
+        linked   2.6.3
