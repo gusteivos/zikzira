@@ -7,3 +7,5 @@
 #files:
 
 /res/res.o
+/res/resource.h
+/res/resource.rc

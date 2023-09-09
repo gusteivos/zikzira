@@ -5,11 +5,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 project(zikzira VERSION 0.0.1 LANGUAGES C)
 
+configure_file(${CMAKE_CURRENT_LIST_DIR}/res/resource.h.in ${CMAKE_CURRENT_LIST_DIR}/res/resource.h @ONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/res/resource.rc.in ${CMAKE_CURRENT_LIST_DIR}/res/resource.rc @ONLY)
 
 if(WIN32)
 
     add_custom_command(OUTPUT ./res/res.o
-    COMMAND windres -F pe-x86-64 res/res.rc -o res/res.o
+    COMMAND windres -F pe-x86-64 res/resource.rc -o res/res.o
     # COMMAND windres -F pe-i386 res/res.rc -o res/res.o
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )

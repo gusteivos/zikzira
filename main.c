@@ -8,7 +8,7 @@ bool init_main()
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0)
     {
-    
+
         fprintf(stderr, "Failed to initialize SDL: %s\n", SDL_GetError());
 
 
@@ -31,7 +31,7 @@ bool init_main()
 
     }
 
-    
+
     int Mix_flags = MIX_INIT_MP3;
 
     if (Mix_Init(Mix_flags) != Mix_flags)
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-    
+
         fprintf(stderr, "Failed to initialize.\n");
 
 
@@ -74,20 +74,20 @@ int main(int argc, char *argv[])
 
     }
 
-    printf("Versão de compilação do SDL_mixer: %d.%d.%d\n", MIX_MAJOR_VERSION, MIX_MINOR_VERSION, MIX_PATCHLEVEL);  
+    printf("Versão de compilação do SDL_mixer: %d.%d.%d\n", MIX_MAJOR_VERSION, MIX_MINOR_VERSION, MIX_PATCHLEVEL);
 
 
     if (!setup_keyboard())
     {
-        
+
         fprintf(stderr, "Error when keyboard setup: %s\n", SDL_GetError());
 
         Mix_Quit();
-        
+
         IMG_Quit();
 
         SDL_Quit();
-    
+
 
         return 1;
 
@@ -100,9 +100,9 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Error when window setup: %s\n", SDL_GetError());
 
         quit_keyboard();
-        
+
         Mix_Quit();
-        
+
         IMG_Quit();
 
         SDL_Quit();
@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         quit_keyboard();
 
         Mix_Quit();
-        
+
         IMG_Quit();
 
         SDL_Quit();
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 
     if ((gameloop_thread = SDL_CreateThread(gameloop_thread_routine, "gameloop thread", NULL)) == NULL)
     {
-        
+
         fprintf(stderr, "Failed to create gameloop thread: %s\n", SDL_GetError());
 
         quit_renderer();
@@ -144,9 +144,9 @@ int main(int argc, char *argv[])
         quit_window  ();
 
         quit_keyboard();
-        
+
         Mix_Quit();
-        
+
         IMG_Quit();
 
         SDL_Quit();
@@ -173,13 +173,13 @@ int main(int argc, char *argv[])
 
             switch (event.type)
             {
-            
+
             case SDL_QUIT:
 
                 gameloop_is_running = false;
 
                 break;
-            
+
             case SDL_WINDOWEVENT:
 
                 if (event.window.windowID == SDL_GetWindowID(window))
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 
             default:
                 break;
-            
+
             }
 
         }
@@ -214,28 +214,28 @@ int main(int argc, char *argv[])
             if (!gameloop_enable_render_sync_variable || gameloop_can_render == false)
             {
 
-        #ifdef GAMELOOP_SYNC_BY_MUTEX  
-            
+        #ifdef GAMELOOP_SYNC_BY_MUTEX
+
                 if (SDL_TryLockMutex(renderer_mutex) == 0)
 
         #endif
-            
-        #ifdef GAMELOOP_SYNC_BY_SPINLOCK  
-            
+
+        #ifdef GAMELOOP_SYNC_BY_SPINLOCK
+
                 if (SDL_AtomicTryLock(&renderer_spin_lock) == SDL_TRUE)
 
         #endif
 
                 {
 
-        #ifdef GAMELOOP_SYNC_BY_MUTEX  
-            
+        #ifdef GAMELOOP_SYNC_BY_MUTEX
+
                     // SDL_LockMutex(renderer_mutex);
 
         #endif
-                    
+
         #ifdef GAMELOOP_SYNC_BY_SPINLOCK
-            
+
                     // SDL_AtomicLock(&renderer_spin_lock);
 
         #endif
@@ -248,15 +248,15 @@ int main(int argc, char *argv[])
 
                     gameloop_can_render = true;
 
-                    
-        #ifdef GAMELOOP_SYNC_BY_MUTEX  
-            
+
+        #ifdef GAMELOOP_SYNC_BY_MUTEX
+
                     SDL_UnlockMutex(renderer_mutex);
 
         #endif
 
         #ifdef GAMELOOP_SYNC_BY_SPINLOCK
-            
+
                     SDL_AtomicUnlock(&renderer_spin_lock);
 
         #endif
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 
 
             // SDL_Delay(1);
-            
+
             utils_nano_sleep(1000);
 
         }
@@ -284,12 +284,12 @@ int main(int argc, char *argv[])
     quit_renderer();
 
     quit_window  ();
-    
+
     quit_keyboard();
 
- 
+
     Mix_Quit();
-    
+
     IMG_Quit();
 
     SDL_Quit();
