@@ -6,7 +6,7 @@ void render_surface_in_renderer(SDL_Surface *surface_, SDL_Renderer *renderer_);
 bool init_main()
 {
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) != 0)
     {
 
         fprintf(stderr, "Failed to initialize SDL: %s\n", SDL_GetError());
@@ -73,8 +73,6 @@ int main(int argc, char *argv[])
         return 1;
 
     }
-
-    printf("Versão de compilação do SDL_mixer: %d.%d.%d\n", MIX_MAJOR_VERSION, MIX_MINOR_VERSION, MIX_PATCHLEVEL);
 
 
     if (!setup_keyboard())
