@@ -14,3 +14,7 @@ libs:
     SDL_mixer:
         compiled 2.6.3
         linked   2.6.3
+
+    TOML:
+        repository    https://github.com/cktan/tomlc99
+        compatibility with TOML v1.0.0
