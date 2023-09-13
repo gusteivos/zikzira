@@ -2,10 +2,7 @@
 #folders:
 
 /build
+/res/build
 /.*
 
 #files:
-
-/res/res.o
-/res/resource.h
-/res/resource.rc

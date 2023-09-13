@@ -1,4 +1,30 @@
 
 #include "resource.h"
 
+1 VERSIONINFO
+FILEVERSION    @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,@PROJECT_VERSION_TWEAK@
+PRODUCTVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,@PROJECT_VERSION_TWEAK@
 
+BEGIN
+
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName",      ""
+      VALUE "FileDescription",  ""
+      VALUE "FileVersion",      "@PROJECT_VERSION@"
+      VALUE "InternalName",     ""
+      VALUE "LegalCopyright",   ""
+      VALUE "OriginalFilename", ""
+      VALUE "ProductName",      ""
+      VALUE "ProductVersion",   "@PROJECT_VERSION@"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252 /*VALUE "Translation", 0x416, 1200*/
+  END
+
+END
