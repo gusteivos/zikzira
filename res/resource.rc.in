@@ -12,12 +12,12 @@ BEGIN
     BLOCK "040904E4"
     BEGIN
       VALUE "CompanyName",      ""
-      VALUE "FileDescription",  ""
+      VALUE "FileDescription",  "@PROJECT_DESCRIPTION@"
       VALUE "FileVersion",      "@PROJECT_VERSION@"
       VALUE "InternalName",     ""
       VALUE "LegalCopyright",   ""
       VALUE "OriginalFilename", ""
-      VALUE "ProductName",      ""
+      VALUE "ProductName",      "@PROJECT_NAME@"
       VALUE "ProductVersion",   "@PROJECT_VERSION@"
     END
   END
