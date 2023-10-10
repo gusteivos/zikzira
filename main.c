@@ -56,12 +56,39 @@ bool init_main()
 int main(int argc, char *argv[])
 {
 
+
+    joystick_t *test_joystick = NULL;
+
+
     if (init_main())
     {
 
-        /*TODO: Manipulate argc argv.*/
+        /*
+
+
+
+        */
 
             gameloop_is_running = true;
+
+
+        test_joystick = open_joystick(0);
+
+        if (test_joystick != NULL)
+        {
+
+            printf("joy name: %s\n", test_joystick->name);
+
+            printf("joy iid : %d\n", test_joystick->iid);
+
+            char guidString[33];
+
+            SDL_GUIDToString(test_joystick->uid, guidString, sizeof(guidString));
+
+            printf("joy uid : %s\n", guidString);
+
+        }
+
 
     }
     else
@@ -80,11 +107,8 @@ int main(int argc, char *argv[])
 
         fprintf(stderr, "Error when keyboard setup: %s\n", SDL_GetError());
 
-        Mix_Quit();
 
-        IMG_Quit();
-
-        SDL_Quit();
+        quit_main(MAIN_QUIT_MIX | MAIN_QUIT_IMG | MAIN_QUIT_SDL);
 
 
         return 1;
@@ -97,13 +121,9 @@ int main(int argc, char *argv[])
 
         fprintf(stderr, "Error when window setup: %s\n", SDL_GetError());
 
-        quit_keyboard();
 
-        Mix_Quit();
-
-        IMG_Quit();
-
-        SDL_Quit();
+        quit_main(MAIN_QUIT_MIX | MAIN_QUIT_IMG | MAIN_QUIT_SDL |
+                  MAIN_QUIT_KEY);
 
 
         return 1;
@@ -114,15 +134,11 @@ int main(int argc, char *argv[])
     if (!setup_renderer(window, -1, SDL_RENDERER_ACCELERATED))
     {
 
-        quit_window  ();
+        fprintf(stderr, "Error when renderer setup: %s\n", SDL_GetError());
 
-        quit_keyboard();
 
-        Mix_Quit();
-
-        IMG_Quit();
-
-        SDL_Quit();
+        quit_main(MAIN_QUIT_MIX | MAIN_QUIT_IMG | MAIN_QUIT_SDL |
+                  MAIN_QUIT_KEY | MAIN_QUIT_WIN);
 
 
         return 1;
@@ -137,17 +153,8 @@ int main(int argc, char *argv[])
 
         fprintf(stderr, "Failed to create gameloop thread: %s\n", SDL_GetError());
 
-        quit_renderer();
 
-        quit_window  ();
-
-        quit_keyboard();
-
-        Mix_Quit();
-
-        IMG_Quit();
-
-        SDL_Quit();
+        quit_main(MAIN_QUIT_ALL);
 
 
         return 1;
@@ -163,6 +170,9 @@ int main(int argc, char *argv[])
     while (gameloop_is_running)
     {
 
+
+        update_joystick_button_states(test_joystick);
+        update_joystick_axi_states(test_joystick);
 
         update_window_attributes();
 
@@ -267,8 +277,6 @@ int main(int argc, char *argv[])
             }
 
 
-            // SDL_Delay(1);
-
             utils_nano_sleep(1000);
 
         }
@@ -279,18 +287,7 @@ int main(int argc, char *argv[])
     SDL_WaitThread(gameloop_thread, NULL);
 
 
-    quit_renderer();
-
-    quit_window  ();
-
-    quit_keyboard();
-
-
-    Mix_Quit();
-
-    IMG_Quit();
-
-    SDL_Quit();
+    quit_main(MAIN_QUIT_ALL);
 
 
     return 0;
@@ -329,6 +326,52 @@ void render_surface_in_renderer(SDL_Surface *surface_, SDL_Renderer *renderer_)
         fprintf(stderr, "TODO: ");
 
     }
+
+
+    return;
+
+}
+
+
+void quit_main(uint32_t quit)
+{
+
+    if (quit | MAIN_QUIT_SDL && !(quit & (MAIN_QUIT_MIX | MAIN_QUIT_IMG | MAIN_QUIT_REN | MAIN_QUIT_WIN | MAIN_QUIT_KEY)))
+    {
+
+        quit_renderer();
+
+        quit_window  ();
+
+        quit_keyboard();
+
+
+        Mix_Quit();
+
+        IMG_Quit();
+
+
+        SDL_Quit();
+
+
+        return;
+
+    }
+
+
+    if (quit | MAIN_QUIT_REN) quit_renderer();
+
+    if (quit | MAIN_QUIT_WIN) quit_window  ();
+
+    if (quit | MAIN_QUIT_KEY) quit_keyboard();
+
+
+    if (quit | MAIN_QUIT_MIX) Mix_Quit();
+
+    if (quit | MAIN_QUIT_IMG) IMG_Quit();
+
+
+    if (quit | MAIN_QUIT_SDL) SDL_Quit();
 
 
     return;
